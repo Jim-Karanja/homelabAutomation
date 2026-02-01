@@ -75,3 +75,37 @@ networks:
 volumes:
   prometheus_data:
   grafana_data:
+
+  # The AI Brain
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    restart: unless-stopped
+    volumes:
+      - ./ollama-data:/root/.ollama
+    deploy:
+      resources:
+        limits:
+          memory: 4500M # Limit AI to ~4.5GB to keep the system stable
+
+  # The Automation Engine
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: unless-stopped
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_HOST=100.127.183.78
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://100.127.183.78:5678/
+    volumes:
+      - ./n8n-data:/home/node/.n8n
+    # This allows n8n to "see" Ollama over the internal Docker network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    deploy:
+      resources:
+        limits:
+          memory: 1G
