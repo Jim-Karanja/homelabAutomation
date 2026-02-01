@@ -68,27 +68,21 @@ services:
     networks:
       - homelab_network
 
-networks:
-  homelab_network:
-    name: homelab_network
-
-volumes:
-  prometheus_data:
-  grafana_data:
-
-  # The AI Brain
+  # The AI Brain 
   ollama:
     image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
     volumes:
       - ./ollama-data:/root/.ollama
+    networks:
+      - homelab_network
     deploy:
       resources:
         limits:
-          memory: 4500M # Limit AI to ~4.5GB to keep the system stable
+          memory: 4500M
 
-  # The Automation Engine
+  #automation Engine
   n8n:
     image: docker.n8n.io/n8nio/n8n
     container_name: n8n
@@ -102,10 +96,19 @@ volumes:
       - WEBHOOK_URL=http://100.127.183.78:5678/
     volumes:
       - ./n8n-data:/home/node/.n8n
-    # This allows n8n to "see" Ollama over the internal Docker network
+    networks:
+      - homelab_network
     extra_hosts:
       - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
           memory: 1G
+
+networks:
+  homelab_network:
+    name: homelab_network
+
+volumes:
+  prometheus_data:
+  grafana_data:
