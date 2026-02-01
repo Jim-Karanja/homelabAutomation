@@ -3,7 +3,7 @@ name: Deploy Homelab
 on:
   push:
     branches:
-      - main  # This triggers the script every time you push to the 'main' branch
+      - main
 
 jobs:
   deploy:
@@ -12,13 +12,20 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      # 1. Connect the GitHub Runner to your Tailscale network
+      - name: Tailscale
+        uses: tailscale/github-action@v2
+        with:
+          oauth-client-id: ${{ secrets.TS_OAUTH_CLIENT_ID }}
+          oauth-secret: ${{ secrets.TS_OAUTH_SECRET }}
+
+      # 2. Now that we are inside the network, run the SSH command
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          # This is the actual script that runs on your Ubuntu server
           script: |
             cd ~/homelab-orchestrator
             git pull origin main
