@@ -3,3 +3,5 @@ npm-letsencrypt/
 config/
 *.log
 .DS_Store
+gh_actions_key
+gh_actions_key.pub
