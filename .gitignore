@@ -5,3 +5,17 @@ config/
 .DS_Store
 gh_actions_key
 gh_actions_key.pub
+# Docker data volumes 
+n8n-data/
+ollama-data/
+npm-data/
+npm-letsencrypt/
+prometheus/
+prometheus_data/
+grafana_data/
+
+# Logs and temporary files
+nohup.out
+*.log
+
+.env

@@ -27,8 +27,9 @@ jobs:
           host: ${{ secrets.HOST }}      
           username: ${{ secrets.USERNAME }}  
           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          command_timeout: 30m  # High timeout for large AI models
           script: |
             cd ~/homelab-orchestrator
             git pull origin main
-            
+            # We use --quiet to keep the logs clean, but keep the timeout high
             docker compose up -d --remove-orphans
