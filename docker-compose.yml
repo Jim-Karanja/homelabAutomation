@@ -97,16 +97,19 @@ services:
       - N8N_PROTOCOL=http
       - WEBHOOK_URL=http://100.127.183.78:5678/
       - N8N_SECURE_COOKIE=false
+      - N8N_BLOCK_NODES=  # <--- THIS UNBLOCKS THE EXECUTE COMMAND NODE
     volumes:
       - ./n8n-data:/home/node/.n8n
+      - /var/run/docker.sock:/var/run/docker.sock # <--- THIS LETS AI SEE DOCKER
     networks:
       - homelab_network
+    user: root # Needed to access the docker.sock inside the container
     extra_hosts:
       - "host.docker.internal:host-gateway"
     deploy:
       resources:
         limits:
-          memory: 1G
+          memory: 2G
 
 networks:
   homelab_network:
