@@ -73,6 +73,8 @@ services:
     image: ollama/ollama:latest
     container_name: ollama
     restart: unless-stopped
+    environment:
+      - OLLAMA_HOST=0.0.0.0 
     volumes:
       - ./ollama-data:/root/.ollama
     networks:
